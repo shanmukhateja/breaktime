@@ -14,10 +14,9 @@ class SessionCounter(threading.Thread):
         self.tray.update(hover_text="New Session is starting!")
         while self.can_run:
             self.cur_time = time.time()
-            self.delay = int(self.cur_time - self.start_time) + 3600
+            self.delay = int(self.cur_time - self.start_time)
             if self.delay > 0:
                 self.update_tray_icon()
-            print("delay: "+str(self.delay))
             time.sleep(SESSION_COUNTER_POLL_INTERVAL)
         threading._shutdown()
 
@@ -32,7 +31,8 @@ class SessionCounter(threading.Thread):
             self.tray.update(icon=ICON_SESSION_WARN)
         elif self.delay >= SESSION_STATE_DANGER_INTERVAL:
             self.tray.update(icon=ICON_SESSION_DANGER,
-                        hover_text=format_time(self.delay))
+                        hover_text=TITLE_TAKE_BREAK)
+            self.can_run=False
 
     def stop_session(self):
         self.can_run = False
